@@ -1,0 +1,34 @@
+%% Task 4: Effect of Airfoil Camber on Lift
+
+% Function inputs
+VINF = 100;
+ALPHA = -5:15;
+XB1 = x1;
+YB1 = y1;
+
+% Task 2: number of panels is 70
+N2 = 70;
+
+% NACA 4412 (Significantly Cambered Airfoil)
+
+m3 = 0.04;
+p3 = 0.4;
+t3 = 0.12;
+[x3, y3, xc3, yc3] = NACA_Airfoil(m3, p3, t3, c, N2);
+
+
+% Vortex Panel Function for varying alpha
+
+for i = 1:length(ALPHA)
+    CL1(i) = Vortex_Panel(x1, y1, VINF, ALPHA(i)); % Symmetric
+    CL2(i) = Vortex_Panel(x2, y2, VINF, ALPHA(i)); % Moderately Cambered
+    CL3(i) = Vortex_Panel(x3, y3, VINF, ALPHA(i)); % Significantly Cambered
+end
+
+figure
+plot(ALPHA, CL1, 'b-', 'LineWidth', 2)
+hold on
+plot(ALPHA, CL2, 'r-', 'LineWidth', 2)
+plot(ALPHA, CL3, 'g-', 'LineWidth', 2)
+xlabel('\alpha (deg)')
+ylabel('C_L')
