@@ -45,7 +45,61 @@ legend('0021 Surface','0021 Panel Points', ...
 
 %% Task 2: Convergence Study
 
-%% Task 3: Effect of Airfoil Thickness on Lift
+%NACA0012
+m3 = 0.0;
+p3 = 0.0;
+t3 = 0.12;
+c3=1;
+
+VINF = 100;
+ALPHA = 12;
+FLAG = 0;
+
+%test cases
+for N=10:200
+    [x3, y3, xc3, yc3] = NACA_Airfoil(m1, p1, t3, c3, N);
+    Cl(N) = Vortex_Panel(x3,y3,VINF,ALPHA);
+end
+
+[x3, y3, xc3, yc3] = NACA_Airfoil(m1, p1, t3, c3, 1000);
+Cl_Real = Vortex_Panel(x3,y3,VINF,ALPHA);
+error = abs((Cl_Real - Cl)./Cl_Real);
+
+min = find(error ~= 1, 1, 'first');
+max=length(error);
+
+for i=1:length(error)
+    if(error(i) <= .01)
+        min_pannels = i;
+        break
+    end
+end
+
+solution = ["Exact";"Predicted"];
+table_Cl = [Cl_Real;Cl(min_pannels)];
+num_panels = [1000;min_pannels];
+table_error = [0;error(min_pannels)];
+T = table(solution,table_Cl,num_panels, table_error,'VariableNames',{'solution','Cl','Number_of_Panels','Cl Prediction Error'})
+N_min = num_panels(2);
+
+% figure;
+% plot(min:2:max,error(min:2:end).*100,'LineWidth',1.5);
+% hold on;
+% xline(min_pannels,'--r','LineWidth',1.5,'Label','N=71 Panels','LabelOrientation','horizontal','LabelVerticalAlignment','middle');
+% legend('Error','Number of Panels for Error < 1%');
+% xlabel('Total Number of Panels');
+% ylabel('% Error');
+
+figure;
+plot(min:2:max,Cl(min:2:end),'LineWidth',1.5);
+hold on;
+xline(min_pannels,'--r','LineWidth',1.5,'Label','N=71 Panels','LabelOrientation','horizontal','LabelVerticalAlignment','middle');
+yline(Cl_Real,'--b','LineWidth',1.5,'Label','Exact Solution','LabelOrientation','horizontal','LabelVerticalAlignment','bottom','LabelHorizontalAlignment','center');
+legend('Predicted Cl','Number of Panels for Error < 1%','Location','southeast')
+xlabel('Total Number of Panels');
+ylabel('Lift Coefficient')
+title('Predicted Cl vs Number of Panels for a NACA0012 Airfoil')
+
 
 %% Task 3: Effect of Airfoil Thickness on Lift
 
