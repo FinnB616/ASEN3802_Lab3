@@ -51,6 +51,7 @@ p3 = 0.0;
 t3 = 0.12;
 c3=1;
 
+%test conditions
 VINF = 100;
 ALPHA = 12;
 FLAG = 0;
@@ -61,13 +62,18 @@ for N=10:200
     Cl(N) = Vortex_Panel(x3,y3,VINF,ALPHA);
 end
 
+%"exact" solution n=1000 panels
 [x3, y3, xc3, yc3] = NACA_Airfoil(m1, p1, t3, c3, 1000);
 Cl_Real = Vortex_Panel(x3,y3,VINF,ALPHA);
+
+%error for each nubmer of pannels
 error = abs((Cl_Real - Cl)./Cl_Real);
 
+%plotting bounds
 min = find(error ~= 1, 1, 'first');
 max=length(error);
 
+%find when error is less than 1%
 for i=1:length(error)
     if(error(i) <= .01)
         min_pannels = i;
@@ -75,6 +81,7 @@ for i=1:length(error)
     end
 end
 
+%create table
 solution = ["Exact";"Predicted"];
 table_Cl = [Cl_Real;Cl(min_pannels)];
 num_panels = [1000;min_pannels];
@@ -82,6 +89,7 @@ table_error = [0;error(min_pannels)];
 T = table(solution,table_Cl,num_panels, table_error,'VariableNames',{'solution','Cl','Number_of_Panels','Cl Prediction Error'})
 N_min = num_panels(2);
 
+% %plot of percent error
 % figure;
 % plot(min:2:max,error(min:2:end).*100,'LineWidth',1.5);
 % hold on;
@@ -90,6 +98,7 @@ N_min = num_panels(2);
 % xlabel('Total Number of Panels');
 % ylabel('% Error');
 
+%Cl vs numbe rof pannels plot
 figure;
 plot(min:2:max,Cl(min:2:end),'LineWidth',1.5);
 hold on;
