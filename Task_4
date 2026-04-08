@@ -3,18 +3,30 @@
 % Function inputs
 VINF = 100;
 ALPHA = -5:15;
-XB1 = x1;
-YB1 = y1;
 
-% Task 2: number of panels is 70
-N2 = 70;
+
+% From Task 2: optimal number of panels is 70
+N = 70;
+
+% NACA 0012
+m1 = 0;
+p1 = 0;
+t1 = 0.12;
+[x1, y1, xc1, yc1] = NACA_Airfoil(m1, p1, t1, c, N);
+
+% NACA 2412 (Moderately Cambered Airfoil)
+
+m1 = 0.02;
+p1 = 0.4;
+t1 = 0.12;
+[x2, y2, xc2, yc2] = NACA_Airfoil(m2, p2, t2, c, N);
 
 % NACA 4412 (Significantly Cambered Airfoil)
 
 m3 = 0.04;
 p3 = 0.4;
 t3 = 0.12;
-[x3, y3, xc3, yc3] = NACA_Airfoil(m3, p3, t3, c, N2);
+[x3, y3, xc3, yc3] = NACA_Airfoil(m3, p3, t3, c, N);
 
 
 % Vortex Panel Function for varying alpha
@@ -26,9 +38,13 @@ for i = 1:length(ALPHA)
 end
 
 figure
-plot(ALPHA, CL1, 'b-', 'LineWidth', 2)
+plot(ALPHA, CL1, 'b-', 'LineWidth', 1.5)
 hold on
-plot(ALPHA, CL2, 'r-', 'LineWidth', 2)
-plot(ALPHA, CL3, 'g-', 'LineWidth', 2)
+plot(ALPHA, CL2, 'r-', 'LineWidth', 1.5)
+plot(ALPHA, CL3, 'g-', 'LineWidth', 1.5)
 xlabel('\alpha (deg)')
-ylabel('C_L')
+ylabel('Cl')
+title('Effect of Airfoil Camber on Lift')
+legend('NACA 0012','NACA 2412', 'NACA 4412')
+grid on
+hold off
