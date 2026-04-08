@@ -47,14 +47,15 @@ legend('0021 Surface','0021 Panel Points', ...
 
 %% Task 3: Effect of Airfoil Thickness on Lift
 
+%% Task 3: Effect of Airfoil Thickness on Lift
+
 %given minimum panels needed in task 2 = 70  
-N_min = 70;
 
 % random freestream velo
 VINF = 100; %m/s?
 
-% aoa alpha ranges from -5 to 15 degrees
-alpha = -5:1:15;
+% aoa alpha ranges from -8 to 10 degrees
+alpha = -8:2:10;
 
 % NACA 0006
 [x31, y31, xc31, yc31] = NACA_Airfoil(0.0, 0.0, 0.06, c, N_min);
@@ -80,8 +81,13 @@ end
 % symmetric AF -> thin airfoil theory
 cl_TAT = 2*pi*deg2rad(alpha);
 
+% Theory of Wing Sections data
+alpha_exp = [-8 -6 -4 -2 0 2 4 6 8 10];
+cl_exp_12 = [-0.86 -0.64 -0.41 -0.20 0.00 0.23 0.45 0.65 0.80 1.10];
+cl_exp_06 = [-0.75 -0.65 -0.42 -0.25 0.00 0.20 0.40 0.63 0.80 0.90];
+
 % use fit to find lift slope and L=0 aoa
-idx = (alpha >= -4) & (alpha <= 8);
+idx = (alpha >= -8) & (alpha <= 10);
 
 p06 = polyfit(alpha(idx), cl_06(idx), 1);
 p12 = polyfit(alpha(idx), cl_12(idx), 1);
@@ -102,13 +108,13 @@ alphaL0_TAT = 0;
 figure
 hold on
 grid on
-box on
-
 
 plot(alpha, cl_06, 'b-', 'LineWidth', 1.5, 'MarkerSize', 5, 'DisplayName', 'VPM NACA 0006')
 plot(alpha, cl_12, 'r-', 'LineWidth', 1.5, 'MarkerSize', 5, 'DisplayName', 'VPM NACA 0012')
 plot(alpha, cl_18, 'g-', 'LineWidth', 1.5, 'MarkerSize', 5, 'DisplayName', 'VPM NACA 0018')
 plot(alpha, cl_TAT, 'k--', 'LineWidth', 2, 'DisplayName', 'Thin Airfoil Theory')
+plot(alpha_exp, cl_exp_06, 'bo', 'MarkerSize', 5, 'MarkerFaceColor', 'b', 'DisplayName', 'Theory of Wing Sections NACA 0006')
+plot(alpha_exp, cl_exp_12, 'rs', 'MarkerSize', 5, 'MarkerFaceColor', 'r', 'DisplayName', 'Theory of Wing Sections NACA 0012')
 
 xlabel('\alpha (deg)')
 ylabel('c_l')
