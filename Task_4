@@ -38,12 +38,12 @@ for i = 1:length(ALPHA)
 end
 
 % interpolating alpha to find exactly when CL is predicted to be zero
+
 alpha0_0012 = interp1(CL1, ALPHA, 0);
 alpha0_2412 = interp1(CL2, ALPHA, 0);
 alpha0_4412 = interp1(CL3, ALPHA, 0);
 
-% Thin Airfoil Theory Slopes, assuming x-inter to be 0, -2, -4
-% respectfully
+% Thin Airfoil Theory, assuming x-inter to be 0, -2, -4 respectfully
 
 % TAT uses radians
 alpha_rad = deg2rad(ALPHA);
@@ -54,6 +54,10 @@ CL_TAT_0012 = 2*pi*(alpha_rad - deg2rad(0));
 CL_TAT_2412 = 2*pi*(alpha_rad - deg2rad(-2));
 CL_TAT_4412 = 2*pi*(alpha_rad - deg2rad(-4));
 
+% Use poly fit function to find slope of each airfoil 
+slope_0012 = polyfit(ALPHA, CL1, 1);
+slope_2412 = polyfit(ALPHA, CL2, 1);
+slope_4412 = polyfit(ALPHA, CL3, 1);
 figure
 
 % Vortex Panel
