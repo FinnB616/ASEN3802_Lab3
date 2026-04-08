@@ -37,14 +37,39 @@ for i = 1:length(ALPHA)
     CL3(i) = Vortex_Panel(x3, y3, VINF, ALPHA(i)); % Significantly Cambered
 end
 
+% interpolating alpha to find exactly when CL is predicted to be zero
+alpha0_0012 = interp1(CL1, ALPHA, 0);
+alpha0_2412 = interp1(CL2, ALPHA, 0);
+alpha0_4412 = interp1(CL3, ALPHA, 0);
+
+% Thin Airfoil Theory Slopes, assuming x-inter to be 0, -2, -4
+% respectfully
+
+% TAT uses radians
+alpha_rad = deg2rad(ALPHA);
+
+% CL / alpha is always 2pi with different x intercepts 
+
+CL_TAT_0012 = 2*pi*(alpha_rad - deg2rad(0));
+CL_TAT_2412 = 2*pi*(alpha_rad - deg2rad(-2));
+CL_TAT_4412 = 2*pi*(alpha_rad - deg2rad(-4));
+
 figure
-plot(ALPHA, CL1, 'b-', 'LineWidth', 1.5)
+
+% Vortex Panel
+plot(ALPHA, CL1, 'b-', 'LineWidth', 1)
 hold on
-plot(ALPHA, CL2, 'r-', 'LineWidth', 1.5)
-plot(ALPHA, CL3, 'g-', 'LineWidth', 1.5)
+plot(ALPHA, CL2, 'r-', 'LineWidth', 1)
+plot(ALPHA, CL3, 'g-', 'LineWidth', 1)
+
+% Thin Airfoil Theory 
+plot(ALPHA, CL_TAT_0012, 'b--')
+plot(ALPHA, CL_TAT_2412, 'r--')
+plot(ALPHA, CL_TAT_4412, 'g--')
+
 xlabel('\alpha (deg)')
 ylabel('Cl')
 title('Effect of Airfoil Camber on Lift')
-legend('NACA 0012','NACA 2412', 'NACA 4412')
+legend('NACA 0012','NACA 2412', 'NACA 4412', 'Thin Airfoil 0012', 'Thin Airfoil 2412', 'Thin Airfoil 4412' )
 grid on
 hold off
