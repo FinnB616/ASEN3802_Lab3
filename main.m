@@ -240,6 +240,22 @@ CL_TAT_0012 = 2*pi*(alpha_rad - deg2rad(0));
 CL_TAT_2412 = 2*pi*(alpha_rad - deg2rad(-2));
 CL_TAT_4412 = 2*pi*(alpha_rad - deg2rad(-4));
 
+% Choose points for experimental slope ~-4 to 8 deg
+alpha_exp_0012 = [-4, 0, 4];
+cl_exp_0012 = [-0.4, 0, 0.4];
+alpha_exp_2412 = [-4, 0, 4];
+cl_exp_2412 = [-0.2, 0.2, 0.6];
+alpha_exp_4412 = [-4.5, -2.3, 0];
+cl_exp_4412 = [-0.04, 0.19, 0.4];
+
+% poly fit for slopes of selected points
+p0012 = polyfit(alpha_exp_0012, cl_exp_0012, 1);
+CL_exp_0012 = p0012(1)*ALPHA + p0012(2);
+p2412 = polyfit(alpha_exp_2412, cl_exp_2412, 1);
+CL_exp_2412 = p2412(1)*ALPHA + p2412(2);
+p4412 = polyfit(alpha_exp_4412, cl_exp_4412, 1);
+CL_exp_4412 = p4412(1)*ALPHA + p4412(2);
+
 % Use poly fit function to find slope of each airfoil 
 slope_0012 = polyfit(ALPHA, CL1, 1);
 slope_2412 = polyfit(ALPHA, CL2, 1);
@@ -257,9 +273,14 @@ plot(ALPHA, CL_TAT_0012, 'b--')
 plot(ALPHA, CL_TAT_2412, 'r--')
 plot(ALPHA, CL_TAT_4412, 'g--')
 
+% Experimental data
+plot(ALPHA, CL_exp_0012, 'b:', 'LineWidth', 1.5)
+plot(ALPHA, CL_exp_2412, 'r:', 'LineWidth', 1.5)
+plot(ALPHA, CL_exp_4412, 'g:', 'LineWidth', 1.5)
+
 xlabel('\alpha (deg)')
 ylabel('Cl')
 title('Effect of Airfoil Camber on Lift')
-legend('NACA 0012','NACA 2412', 'NACA 4412', 'Thin Airfoil 0012', 'Thin Airfoil 2412', 'Thin Airfoil 4412' )
+legend('NACA 0012','NACA 2412', 'NACA 4412', 'Thin Airfoil 0012', 'Thin Airfoil 2412', 'Thin Airfoil 4412','Exp 0012','Exp 2412','Exp 4412')
 grid on
 hold off
