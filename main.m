@@ -1,4 +1,4 @@
-%% Aero Lab Part 1 MAIN (Tasks 1-4)
+%% Aero Lab MAIN (Parts 1+2)
 clear;
 clc;
 close all;
@@ -284,3 +284,50 @@ title('Effect of Airfoil Camber on Lift')
 legend('NACA 0012','NACA 2412', 'NACA 4412', 'Thin Airfoil 0012', 'Thin Airfoil 2412', 'Thin Airfoil 4412','Exp 0012','Exp 2412','Exp 4412')
 grid on
 hold off
+
+
+%% Part 2 Task 1: Prandtl Lifting Line
+% Parameters (arbitrary for now)
+b = 10; % span
+a0_r = 2*pi; % lift slope root
+a0_t = 2*pi; % lift slope tip
+aero_r = 0; % zero-lift AoA root (deg)
+aero_t = 0; % zero-lift AoA tip (deg)
+geo_r = 5; % geometric AoA root (deg)
+geo_t = 5; % geometric AoA tip (deg)
+
+N = 50; % number of odd terms
+
+% Match aspect ratios
+AR_list = [4, 6, 8, 10];
+
+% Taper ratio range
+lambda = linspace(0,1,60);
+
+figure
+hold on
+grid on
+
+for k = 1:length(AR_list)
+    AR = AR_list(k);
+    delta_vals = zeros(size(lambda));
+    for i = 1:length(lambda)
+        c_r = 1; % root chord
+        c_t = lambda(i); % taper ratio
+        % Find span: AR = b^2 /S then S = b*(c_r + c_t)/2 
+        b_local = 0.5 * (AR * (c_r + c_t));
+        % Call your PLLT function
+        [e, CL, CDi] = PLLT(b_local,a0_t,a0_r,c_t,c_r, aero_t,aero_r,geo_t,geo_r,N);
+        % Convert efficiency to delta
+        delta_vals(i) = (1/e) - 1;
+    end
+    % Plot AR curves
+    plot(lambda, delta_vals, 'LineWidth', 2, 'DisplayName', ['AR = ' num2str(AR)]);
+end
+
+xlabel('Taper Ratio, c_t / c_r')
+ylabel('\delta (Induced Drag Factor)')
+title('Induced Drag Factor vs Taper Ratio')
+legend('Location','best')
+xlim([0 1])
+ylim([0 0.16])
