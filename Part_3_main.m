@@ -12,7 +12,7 @@ root_foil = "0012";
 tip_foil = "2412";
 
 Num_panels = 72; %total number of panels in the airfoil
-Num_odd_terms_pllt = 10;
+Num_odd_terms_pllt = 100;
 geo_r = 1;
 geo_t = 0;
 
@@ -37,14 +37,19 @@ end
 
 %use a linear fit to find the lift slopes and convert to 1/rad
 root_fit = polyfit(alpha,CL_root,1);
-a0_r = root_fit(1)*(pi/180);
+a0_r = root_fit(1)*(180/pi);
 tip_fit = polyfit(alpha,CL_tip,1);
-a0_t = tip_fit(1)*(pi/180);
+a0_t = tip_fit(1)*(180/pi);
 
 %find aerodynamic twist (same thing as zero lift aoa) at root and tip using linear interpolation of CL
 %and alpha
 aero_r = interp1(CL_root, alpha, 0);
 aero_t = interp1(CL_tip, alpha, 0);
 
-
+%run pllt code for 0 effective aoa and 1 degree to get 3d lift slope. Pllt
+%always makes linear lift slope so only need to run 2 anlges of attack.
 [e,CL,CDi] = PLLT(b,a0_t,a0_r,c_tip,c_root,aero_t,aero_r,geo_t,geo_r,Num_odd_terms_pllt);
+[e_2,CL_2,CDi_2] = PLLT(b,a0_t,a0_r,c_tip,c_root,aero_t,aero_r,geo_t+1,geo_r+1,Num_odd_terms_pllt);
+
+%find 3D lift slope in 1/deg
+Lift_slope_3D = CL_2-CL;
