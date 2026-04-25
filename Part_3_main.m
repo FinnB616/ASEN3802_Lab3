@@ -99,6 +99,28 @@ end
 figure
 plot(N_values, CL_vals, 'LineWidth',2)
 hold on
+
+% Mark tolerance locations
+labels = {'10%','1%','0.1%'};
+for t = 1:length(tolerances)
+    tol = tolerances(t);
+    iCL = find(CL_error < tol,1); % lines at N=2,4,6
+    xline(N_values(iCL),'--',labels{t});
+end
+
+xlim([1 10]) % to zoom in and see differences
+ylim([.4 0.6])
+xlabel('Number of odd terms, N')
+ylabel('Lift Coefficient')
+title('Convergence of C_L')
+xline(NaN,'--'); % dummy for legend
+legend('C_L','Relative error thresholds','Location','best')
+grid on
+
+
+
+figure
+hold on
 plot(N_values, CDi_vals, 'LineWidth',2)
 
 % Mark tolerance locations
@@ -110,12 +132,12 @@ for t = 1:length(tolerances)
 end
 
 xlim([1 10]) % to zoom in and see differences
-ylim([0 0.8])
+ylim([0 0.05])
 xlabel('Number of odd terms, N')
-ylabel('Coefficient value')
-title('Convergence of C_L and C_{D,i}')
+ylabel('Induced Drag Coefficinet')
+title('Convergence of C_{D,i}')
 xline(NaN,'--'); % dummy for legend
-legend('C_L','C_{D,i}','Relative error thresholds','Location','best')
+legend('C_{D,i}','Relative error thresholds','Location','best')
 grid on
 
 %% Deliverable 3: Table of forces and efficiency
@@ -155,17 +177,14 @@ for i = 1:length(alpha_sweep)
     CD_total_array(i) = CDi_temp + cd_profile;
 end
 
-CD_profile_array = cd_profile * ones(size(alpha_sweep)); %profile drag
-
 figure
 plot(alpha_sweep, CD_total_array, 'LineWidth',2)
 hold on
 plot(alpha_sweep, CDi_array, '--', 'LineWidth',2)
-plot(alpha_sweep, CD_profile_array, ':', 'LineWidth',2)
 xlabel('Angle of attack (deg)')
 ylabel('Drag coefficient')
-title('Drag Components vs Angle of Attack')
-legend('Total drag','Induced drag','Profile drag','Location','best')
+title('Total and Induced Drag vs Angle of Attack')
+legend('Total drag','Induced drag')
 grid on
 
 %% Deliverable 5: L/D vs angle of attack
