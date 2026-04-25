@@ -155,14 +155,17 @@ for i = 1:length(alpha_sweep)
     CD_total_array(i) = CDi_temp + cd_profile;
 end
 
+CD_profile_array = cd_profile * ones(size(alpha_sweep)); %profile drag
+
 figure
 plot(alpha_sweep, CD_total_array, 'LineWidth',2)
 hold on
 plot(alpha_sweep, CDi_array, '--', 'LineWidth',2)
+plot(alpha_sweep, CD_profile_array, ':', 'LineWidth',2)
 xlabel('Angle of attack (deg)')
 ylabel('Drag coefficient')
-title('Total and Induced Drag vs Angle of Attack')
-legend('Total drag','Induced drag')
+title('Drag Components vs Angle of Attack')
+legend('Total drag','Induced drag','Profile drag','Location','best')
 grid on
 
 %% Deliverable 5: L/D vs angle of attack
